@@ -11,6 +11,18 @@ const form = reactive({
   password: '',
 })
 
+function getErrorMessage(err) {
+  if (err.response?.data?.message) {
+    return err.response.data.message
+  }
+
+  if (err.request) {
+    return 'Could not reach the API. Check that the backend server is running.'
+  }
+
+  return 'Unable to sign in with those credentials.'
+}
+
 async function submit() {
   error.value = ''
 
@@ -18,7 +30,7 @@ async function submit() {
     await auth.login(form)
     router.push({ name: 'dashboard' })
   } catch (err) {
-    error.value = err.response?.data?.message || 'Unable to sign in with those credentials.'
+    error.value = getErrorMessage(err)
   }
 }
 </script>

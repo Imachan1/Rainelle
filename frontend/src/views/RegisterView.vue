@@ -13,6 +13,18 @@ const form = reactive({
   password_confirmation: '',
 })
 
+function getErrorMessage(err) {
+  if (err.response?.data?.message) {
+    return err.response.data.message
+  }
+
+  if (err.request) {
+    return 'Could not reach the API. Check that the backend server is running.'
+  }
+
+  return 'Unable to create an account.'
+}
+
 async function submit() {
   error.value = ''
 
@@ -20,7 +32,7 @@ async function submit() {
     await auth.register(form)
     router.push({ name: 'dashboard' })
   } catch (err) {
-    error.value = err.response?.data?.message || 'Unable to create an account.'
+    error.value = getErrorMessage(err)
   }
 }
 </script>
