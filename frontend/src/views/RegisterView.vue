@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { getApiErrorMessage } from '../api/errors'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
@@ -13,18 +14,6 @@ const form = reactive({
   password_confirmation: '',
 })
 
-function getErrorMessage(err) {
-  if (err.response?.data?.message) {
-    return err.response.data.message
-  }
-
-  if (err.request) {
-    return 'Could not reach the API. Check that the backend server is running.'
-  }
-
-  return 'Unable to create an account.'
-}
-
 async function submit() {
   error.value = ''
 
@@ -32,7 +21,7 @@ async function submit() {
     await auth.register(form)
     router.push({ name: 'dashboard' })
   } catch (err) {
-    error.value = getErrorMessage(err)
+    error.value = getApiErrorMessage(err, 'Unable to create an account.')
   }
 }
 </script>
