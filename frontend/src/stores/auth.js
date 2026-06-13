@@ -1,17 +1,23 @@
 import { defineStore } from 'pinia'
 import * as authApi from '../api/auth'
 
+const TOKEN_KEY = 'auth_token'
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: localStorage.getItem('auth_token'),
+    token: localStorage.getItem(TOKEN_KEY),
     loading: false,
+    initialized: false,
   }),
+  getters: {
+    isAuthenticated: (state) => Boolean(state.token),
+  },
   actions: {
     setSession({ user, token }) {
       this.user = user
       this.token = token
-      localStorage.setItem('auth_token', token)
+      localStorage.setItem(TOKEN_KEY, token)
     },
     async login(payload) {
       this.loading = true
@@ -32,19 +38,33 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async fetchUser() {
-      if (!this.token) return
-
-      const { data } = await authApi.fetchMe()
-      this.user = data
-    },
-    async logout() {
-      if (this.token) {
-        await authApi.logout()
+      if (!this.token) {
+        this.initialized = true
+        return
       }
 
+      try {
+        const { data } = await authApi.fetchMe()
+        this.user = data.user
+      } catch {
+        this.clearSession()
+      } finally {
+        this.initialized = true
+      }
+    },
+    async logout() {
+      try {
+        if (this.token) {
+          await authApi.logout()
+        }
+      } finally {
+        this.clearSession()
+      }
+    },
+    clearSession() {
       this.user = null
       this.token = null
-      localStorage.removeItem('auth_token')
+      localStorage.removeItem(TOKEN_KEY)
     },
   },
 })
