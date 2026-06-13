@@ -38,14 +38,18 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   const auth = useAuthStore()
 
-  if (to.meta.requiresAuth && !auth.token) {
+  if (!auth.initialized) {
+    await auth.fetchUser()
+  }
+
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'login' }
   }
 
-  if ((to.name === 'login' || to.name === 'register') && auth.token) {
+  if ((to.name === 'login' || to.name === 'register') && auth.isAuthenticated) {
     return { name: 'dashboard' }
   }
 })
