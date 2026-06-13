@@ -17,8 +17,8 @@ async function submit() {
   try {
     await auth.login(form)
     router.push({ name: 'dashboard' })
-  } catch {
-    error.value = 'Unable to sign in with those credentials.'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Unable to sign in with those credentials.'
   }
 }
 </script>
@@ -35,7 +35,9 @@ async function submit() {
       <input v-model="form.password" type="password" required />
     </label>
     <p v-if="error" class="error">{{ error }}</p>
-    <button type="submit">Log in</button>
+    <button type="submit" :disabled="auth.loading">
+      {{ auth.loading ? 'Logging in...' : 'Log in' }}
+    </button>
     <RouterLink to="/register">Create an account</RouterLink>
   </form>
 </template>

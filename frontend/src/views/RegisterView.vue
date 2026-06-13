@@ -19,8 +19,8 @@ async function submit() {
   try {
     await auth.register(form)
     router.push({ name: 'dashboard' })
-  } catch {
-    error.value = 'Unable to create an account.'
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Unable to create an account.'
   }
 }
 </script>
@@ -45,7 +45,9 @@ async function submit() {
       <input v-model="form.password_confirmation" type="password" minlength="8" required />
     </label>
     <p v-if="error" class="error">{{ error }}</p>
-    <button type="submit">Register</button>
+    <button type="submit" :disabled="auth.loading">
+      {{ auth.loading ? 'Creating account...' : 'Register' }}
+    </button>
     <RouterLink to="/login">Already have an account?</RouterLink>
   </form>
 </template>
