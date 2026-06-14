@@ -11,11 +11,10 @@ class MoodEntryFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'entry_date' => fake()->date(),
-            'mood' => fake()->randomElement(['calm', 'happy', 'tired', 'stressed']),
-            'intensity' => fake()->numberBetween(1, 10),
-            'emotions' => [],
-            'notes' => fake()->optional()->sentence(),
+            'date' => fake()->date(),
+            'mood_score' => fake()->numberBetween(1, 10),
+            'emotion' => fake()->randomElement(['calm', 'happy', 'tired', 'stressed']),
+            'note' => fake()->optional()->sentence(),
         ];
     }
 }

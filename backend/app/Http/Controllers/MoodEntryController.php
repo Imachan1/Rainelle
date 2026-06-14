@@ -10,24 +10,26 @@ class MoodEntryController extends Controller
 {
     public function index()
     {
-        return auth()->user()
+        $entries = auth()->user()
             ->moodEntries()
-            ->latest('entry_date')
+            ->latest('date')
             ->get();
+
+        return response()->json(['data' => $entries]);
     }
 
     public function store(StoreMoodEntryRequest $request)
     {
         $entry = $request->user()->moodEntries()->create($request->validated());
 
-        return response()->json($entry, 201);
+        return response()->json(['data' => $entry], 201);
     }
 
     public function show(MoodEntry $moodEntry)
     {
         $this->authorizeEntry($moodEntry);
 
-        return $moodEntry;
+        return response()->json(['data' => $moodEntry]);
     }
 
     public function update(UpdateMoodEntryRequest $request, MoodEntry $moodEntry)
@@ -36,7 +38,7 @@ class MoodEntryController extends Controller
 
         $moodEntry->update($request->validated());
 
-        return $moodEntry;
+        return response()->json(['data' => $moodEntry]);
     }
 
     public function destroy(MoodEntry $moodEntry)
@@ -45,7 +47,7 @@ class MoodEntryController extends Controller
 
         $moodEntry->delete();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Mood entry deleted.']);
     }
 
     private function authorizeEntry(MoodEntry $moodEntry): void

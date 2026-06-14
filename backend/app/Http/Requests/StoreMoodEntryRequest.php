@@ -14,15 +14,10 @@ class StoreMoodEntryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'entry_date' => ['required', 'date'],
-            'mood' => ['required', 'string', 'max:50'],
-            'intensity' => ['required', 'integer', 'min:1', 'max:10'],
-            'emotions' => ['nullable', 'array'],
-            'emotions.*' => ['string', 'max:50'],
-            'notes' => ['nullable', 'string', 'max:2000'],
-            'weather_summary' => ['nullable', 'string', 'max:120'],
-            'temperature' => ['nullable', 'numeric', 'between:-100,100'],
-            'weather_data' => ['nullable', 'array'],
+            'date' => ['required', 'date'],
+            'mood_score' => ['required', 'integer', 'min:1', 'max:10'],
+            'emotion' => ['required', 'string', 'max:80'],
+            'note' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

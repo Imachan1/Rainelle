@@ -10,23 +10,17 @@ class MoodEntry extends Model
     use HasFactory;
 
     protected $fillable = [
-        'entry_date',
-        'mood',
-        'intensity',
-        'emotions',
-        'notes',
-        'weather_summary',
-        'temperature',
-        'weather_data',
+        'date',
+        'mood_score',
+        'emotion',
+        'note',
     ];
 
     protected function casts(): array
     {
         return [
-            'entry_date' => 'date',
-            'emotions' => 'array',
-            'weather_data' => 'array',
-            'temperature' => 'decimal:1',
+            'date' => 'date:Y-m-d',
+            'mood_score' => 'integer',
         ];
     }
 
