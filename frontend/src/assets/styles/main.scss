@@ -140,6 +140,16 @@ p {
   padding: 0.75rem 0;
 }
 
+.entry-summary span {
+  text-align: right;
+}
+
+.entry-summary small {
+  color: #64748b;
+  display: block;
+  margin-top: 0.25rem;
+}
+
 .entry-summary:last-child {
   border-bottom: 0;
 }
@@ -152,6 +162,12 @@ p {
 .form label {
   display: grid;
   gap: 0.35rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .form-actions {
@@ -168,6 +184,10 @@ p {
   margin-top: 1.5rem;
 }
 
+.muted {
+  color: #64748b;
+}
+
 @media (max-width: 760px) {
   .app-layout {
     grid-template-columns: 1fr;
@@ -179,6 +199,10 @@ p {
   }
 
   .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
     grid-template-columns: 1fr;
   }
 }

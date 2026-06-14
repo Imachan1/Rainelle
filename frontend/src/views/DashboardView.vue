@@ -5,6 +5,32 @@ import { useDashboardStore } from '../stores/dashboard'
 const dashboard = useDashboardStore()
 const summary = computed(() => dashboard.summary)
 
+function hasWeather(entry) {
+  if (!entry) return false
+
+  return [
+    entry.temperature,
+    entry.humidity,
+    entry.pressure,
+    entry.wind_speed,
+    entry.weather_condition,
+  ].some((value) => value !== null && value !== undefined && value !== '')
+}
+
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== ''
+}
+
+function weatherSummary(entry) {
+  return [
+    hasValue(entry.temperature) ? `${entry.temperature}C` : null,
+    hasValue(entry.humidity) ? `${entry.humidity}% humidity` : null,
+    hasValue(entry.pressure) ? `${entry.pressure} hPa` : null,
+    hasValue(entry.wind_speed) ? `${entry.wind_speed} wind` : null,
+    entry.weather_condition,
+  ].filter(Boolean).join(' - ')
+}
+
 onMounted(() => dashboard.fetchSummary())
 </script>
 
@@ -33,9 +59,12 @@ onMounted(() => dashboard.fetchSummary())
 
       <div class="panel">
         <h2>Today</h2>
-        <p v-if="summary?.today_entry">
-          {{ summary.today_entry.emotion }} - {{ summary.today_entry.mood_score }}/10
-        </p>
+        <template v-if="summary?.today_entry">
+          <p>{{ summary.today_entry.emotion }} - {{ summary.today_entry.mood_score }}/10</p>
+          <p v-if="hasWeather(summary.today_entry)" class="muted">
+            {{ weatherSummary(summary.today_entry) }}
+          </p>
+        </template>
         <p v-else>No mood entry for today yet.</p>
       </div>
 
@@ -49,7 +78,10 @@ onMounted(() => dashboard.fetchSummary())
             class="entry-summary"
           >
             <strong>{{ entry.date }}</strong>
-            <span>{{ entry.emotion }} - {{ entry.mood_score }}/10</span>
+            <span>
+              {{ entry.emotion }} - {{ entry.mood_score }}/10
+              <small v-if="hasWeather(entry)">{{ weatherSummary(entry) }}</small>
+            </span>
           </RouterLink>
         </div>
         <p v-else>No entries yet.</p>

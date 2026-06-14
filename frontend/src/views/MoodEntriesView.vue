@@ -10,6 +10,30 @@ function preview(note) {
   return note.length > 90 ? `${note.slice(0, 90)}...` : note
 }
 
+function hasWeather(entry) {
+  return [
+    entry.temperature,
+    entry.humidity,
+    entry.pressure,
+    entry.wind_speed,
+    entry.weather_condition,
+  ].some((value) => value !== null && value !== undefined && value !== '')
+}
+
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== ''
+}
+
+function weatherSummary(entry) {
+  return [
+    hasValue(entry.temperature) ? `${entry.temperature}C` : null,
+    hasValue(entry.humidity) ? `${entry.humidity}% humidity` : null,
+    hasValue(entry.pressure) ? `${entry.pressure} hPa` : null,
+    hasValue(entry.wind_speed) ? `${entry.wind_speed} wind` : null,
+    entry.weather_condition,
+  ].filter(Boolean).join(' - ')
+}
+
 async function deleteEntry(id) {
   await moodEntries.deleteEntry(id)
 }
@@ -32,6 +56,7 @@ onMounted(() => moodEntries.fetchEntries())
         <div>
           <strong>{{ entry.date }}</strong>
           <p>{{ entry.emotion }} - {{ entry.mood_score }}/10</p>
+          <p v-if="hasWeather(entry)" class="muted">{{ weatherSummary(entry) }}</p>
           <p>{{ preview(entry.note) }}</p>
         </div>
 

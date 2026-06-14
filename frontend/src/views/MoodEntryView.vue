@@ -12,6 +12,11 @@ const form = reactive({
   mood_score: 5,
   emotion: '',
   note: '',
+  temperature: '',
+  humidity: '',
+  pressure: '',
+  wind_speed: '',
+  weather_condition: '',
 })
 
 onMounted(async () => {
@@ -22,6 +27,11 @@ onMounted(async () => {
   form.mood_score = entry.mood_score
   form.emotion = entry.emotion
   form.note = entry.note || ''
+  form.temperature = entry.temperature ?? ''
+  form.humidity = entry.humidity ?? ''
+  form.pressure = entry.pressure ?? ''
+  form.wind_speed = entry.wind_speed ?? ''
+  form.weather_condition = entry.weather_condition || ''
 })
 
 async function submit() {
@@ -58,6 +68,33 @@ async function submit() {
       <label>
         Note
         <textarea v-model="form.note" rows="4" maxlength="2000" />
+      </label>
+
+      <div class="form-grid">
+        <label>
+          Temperature
+          <input v-model.number="form.temperature" type="number" step="0.1" />
+        </label>
+
+        <label>
+          Humidity
+          <input v-model.number="form.humidity" type="number" min="0" max="100" />
+        </label>
+
+        <label>
+          Pressure
+          <input v-model.number="form.pressure" type="number" min="800" max="1200" />
+        </label>
+
+        <label>
+          Wind speed
+          <input v-model.number="form.wind_speed" type="number" min="0" step="0.1" />
+        </label>
+      </div>
+
+      <label>
+        Weather condition
+        <input v-model="form.weather_condition" type="text" maxlength="80" />
       </label>
 
       <p v-if="moodEntries.errors" class="error">{{ moodEntries.errors }}</p>
