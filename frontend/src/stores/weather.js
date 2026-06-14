@@ -16,7 +16,6 @@ export const useWeatherStore = defineStore('weather', {
         this.current = await fetchCurrentWeather(coords)
       } catch (error) {
         this.error = getApiErrorMessage(error, 'Unable to load weather.')
-        throw error
       } finally {
         this.loading = false
       }

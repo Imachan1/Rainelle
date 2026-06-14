@@ -7,5 +7,9 @@ export function getApiErrorMessage(error, fallback) {
     return 'Could not reach the API. Check that the backend server is running.'
   }
 
+  if (error.message) {
+    return error.message
+  }
+
   return fallback
 }

@@ -35,7 +35,7 @@ async function useCurrentLocation() {
 
 async function refreshWeather() {
   if (!lastCoords.value) {
-    await useCurrentLocation()
+    weather.error = 'Use current location before refreshing weather.'
     return
   }
 
