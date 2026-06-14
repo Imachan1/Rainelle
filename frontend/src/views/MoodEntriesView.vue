@@ -1,20 +1,17 @@
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted } from 'vue'
 import { useMoodEntriesStore } from '../stores/moodEntries'
 
 const moodEntries = useMoodEntriesStore()
-const form = reactive({
-  entry_date: new Date().toISOString().slice(0, 10),
-  mood: '',
-  intensity: 5,
-  notes: '',
-})
 
-async function submit() {
-  await moodEntries.createEntry({ ...form })
-  form.mood = ''
-  form.intensity = 5
-  form.notes = ''
+function preview(note) {
+  if (!note) return 'No note'
+
+  return note.length > 90 ? `${note.slice(0, 90)}...` : note
+}
+
+async function deleteEntry(id) {
+  await moodEntries.deleteEntry(id)
 }
 
 onMounted(() => moodEntries.fetchEntries())
@@ -22,38 +19,31 @@ onMounted(() => moodEntries.fetchEntries())
 
 <template>
   <section>
-    <h1>Mood Entries</h1>
+    <div class="page-header">
+      <h1>Mood Entries</h1>
+      <RouterLink class="button-link" to="/mood-entries/new">New entry</RouterLink>
+    </div>
 
-    <form class="form panel" @submit.prevent="submit">
-      <label>
-        Date
-        <input v-model="form.entry_date" type="date" required />
-      </label>
-      <label>
-        Mood
-        <input v-model="form.mood" type="text" required />
-      </label>
-      <label>
-        Intensity
-        <input v-model.number="form.intensity" type="number" min="1" max="10" required />
-      </label>
-      <label>
-        Notes
-        <textarea v-model="form.notes" rows="3" />
-      </label>
-      <button type="submit">Save entry</button>
-    </form>
+    <p v-if="moodEntries.errors" class="error">{{ moodEntries.errors }}</p>
+    <p v-if="moodEntries.loading">Loading entries...</p>
 
-    <div class="list">
-      <RouterLink
-        v-for="entry in moodEntries.entries"
-        :key="entry.id"
-        class="panel"
-        :to="`/mood-entries/${entry.id}`"
-      >
-        <strong>{{ entry.mood }}</strong>
-        <span>{{ entry.entry_date }} - {{ entry.intensity }}/10</span>
-      </RouterLink>
+    <div v-else-if="moodEntries.entries.length" class="list">
+      <article v-for="entry in moodEntries.entries" :key="entry.id" class="panel entry-row">
+        <div>
+          <strong>{{ entry.date }}</strong>
+          <p>{{ entry.emotion }} - {{ entry.mood_score }}/10</p>
+          <p>{{ preview(entry.note) }}</p>
+        </div>
+
+        <div class="entry-actions">
+          <RouterLink :to="`/mood-entries/${entry.id}`">Edit</RouterLink>
+          <button type="button" @click="deleteEntry(entry.id)">Delete</button>
+        </div>
+      </article>
+    </div>
+
+    <div v-else class="panel">
+      <p>No mood entries yet.</p>
     </div>
   </section>
 </template>

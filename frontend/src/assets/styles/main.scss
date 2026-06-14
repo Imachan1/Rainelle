@@ -29,6 +29,11 @@ button {
   padding: 0.7rem 1rem;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 input,
 textarea {
   border: 1px solid #d5dbea;
@@ -86,6 +91,34 @@ p {
   display: block;
   margin-bottom: 1rem;
   padding: 1rem;
+}
+
+.page-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.button-link {
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.7rem 1rem;
+}
+
+.entry-row {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.entry-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
 }
 
 .form {
