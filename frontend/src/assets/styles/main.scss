@@ -176,6 +176,17 @@ p {
   gap: 1rem;
 }
 
+.weather-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.weather-header h2 {
+  margin: 0;
+}
+
 .error {
   color: #b91c1c;
 }

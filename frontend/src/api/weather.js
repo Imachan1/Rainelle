@@ -1,5 +1,9 @@
 import api from './axios'
 
-export function fetchCurrentWeather() {
-  return api.get('/weather/current')
+export async function fetchCurrentWeather({ lat, lon }) {
+  const response = await api.get('/weather/current', {
+    params: { lat, lon },
+  })
+
+  return response.data.data
 }

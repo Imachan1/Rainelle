@@ -1,12 +1,16 @@
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getApiErrorMessage } from '../api/errors'
+import { fetchCurrentWeather } from '../api/weather'
 import { useMoodEntriesStore } from '../stores/moodEntries'
 
 const route = useRoute()
 const router = useRouter()
 const moodEntries = useMoodEntriesStore()
 const isEditing = computed(() => route.params.id !== 'new')
+const weatherLoading = ref(false)
+const weatherError = ref('')
 const form = reactive({
   date: new Date().toISOString().slice(0, 10),
   mood_score: 5,
@@ -18,6 +22,17 @@ const form = reactive({
   wind_speed: '',
   weather_condition: '',
 })
+
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation is not supported by this browser.'))
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(resolve, reject)
+  })
+}
 
 onMounted(async () => {
   if (!isEditing.value) return
@@ -33,6 +48,29 @@ onMounted(async () => {
   form.wind_speed = entry.wind_speed ?? ''
   form.weather_condition = entry.weather_condition || ''
 })
+
+async function fillWeatherFromLocation() {
+  weatherLoading.value = true
+  weatherError.value = ''
+
+  try {
+    const position = await getCurrentPosition()
+    const weather = await fetchCurrentWeather({
+      lat: position.coords.latitude,
+      lon: position.coords.longitude,
+    })
+
+    form.temperature = weather.temperature ?? ''
+    form.humidity = weather.humidity ?? ''
+    form.pressure = weather.pressure ?? ''
+    form.wind_speed = weather.wind_speed ?? ''
+    form.weather_condition = weather.weather_condition || ''
+  } catch (error) {
+    weatherError.value = getApiErrorMessage(error, error.message || 'Unable to load weather.')
+  } finally {
+    weatherLoading.value = false
+  }
+}
 
 async function submit() {
   if (isEditing.value) {
@@ -69,6 +107,15 @@ async function submit() {
         Note
         <textarea v-model="form.note" rows="4" maxlength="2000" />
       </label>
+
+      <div class="weather-header">
+        <h2>Weather</h2>
+        <button type="button" :disabled="weatherLoading" @click="fillWeatherFromLocation">
+          {{ weatherLoading ? 'Loading weather...' : 'Use current location weather' }}
+        </button>
+      </div>
+
+      <p v-if="weatherError" class="error">{{ weatherError }}</p>
 
       <div class="form-grid">
         <label>
