@@ -1,6 +1,18 @@
 export function getApiErrorMessage(error, fallback) {
-  if (error.response?.data?.message) {
-    return error.response.data.message
+  const status = error.response?.status
+  const errors = error.response?.data?.errors
+  const message = error.response?.data?.message
+
+  if (errors) {
+    return Object.values(errors).flat()[0] || fallback
+  }
+
+  if (status >= 500) {
+    return fallback
+  }
+
+  if (message && !message.startsWith('SQLSTATE')) {
+    return message
   }
 
   if (error.request) {

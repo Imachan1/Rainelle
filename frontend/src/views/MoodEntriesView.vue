@@ -35,6 +35,8 @@ function weatherSummary(entry) {
 }
 
 async function deleteEntry(id) {
+  if (!confirm('Delete this mood entry?')) return
+
   await moodEntries.deleteEntry(id)
 }
 
@@ -62,13 +64,16 @@ onMounted(() => moodEntries.fetchEntries())
 
         <div class="entry-actions">
           <RouterLink :to="`/mood-entries/${entry.id}`">Edit</RouterLink>
-          <button type="button" @click="deleteEntry(entry.id)">Delete</button>
+          <button type="button" :disabled="moodEntries.loading" @click="deleteEntry(entry.id)">
+            Delete
+          </button>
         </div>
       </article>
     </div>
 
     <div v-else class="panel">
       <p>No mood entries yet.</p>
+      <RouterLink class="button-link" to="/mood-entries/new">Create your first entry</RouterLink>
     </div>
   </section>
 </template>

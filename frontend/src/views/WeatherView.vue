@@ -49,7 +49,7 @@ async function refreshWeather() {
       <h1>Weather</h1>
       <div class="entry-actions">
         <button type="button" :disabled="weather.loading" @click="useCurrentLocation">
-          Use current location
+          {{ weather.loading ? 'Loading...' : 'Use current location' }}
         </button>
         <button type="button" :disabled="weather.loading" @click="refreshWeather">
           Refresh

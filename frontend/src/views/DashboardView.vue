@@ -66,6 +66,7 @@ onMounted(() => dashboard.fetchSummary())
           </p>
         </template>
         <p v-else>No mood entry for today yet.</p>
+        <RouterLink v-if="!summary?.today_entry" to="/mood-entries/new">Add today's entry</RouterLink>
       </div>
 
       <div class="panel">
@@ -85,6 +86,9 @@ onMounted(() => dashboard.fetchSummary())
           </RouterLink>
         </div>
         <p v-else>No entries yet.</p>
+        <RouterLink v-if="!summary?.latest_entries?.length" to="/mood-entries/new">
+          Create your first entry
+        </RouterLink>
       </div>
     </div>
   </section>

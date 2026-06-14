@@ -37,16 +37,18 @@ function getCurrentPosition() {
 onMounted(async () => {
   if (!isEditing.value) return
 
-  const entry = await moodEntries.fetchEntry(route.params.id)
-  form.date = entry.date
-  form.mood_score = entry.mood_score
-  form.emotion = entry.emotion
-  form.note = entry.note || ''
-  form.temperature = entry.temperature ?? ''
-  form.humidity = entry.humidity ?? ''
-  form.pressure = entry.pressure ?? ''
-  form.wind_speed = entry.wind_speed ?? ''
-  form.weather_condition = entry.weather_condition || ''
+  try {
+    const entry = await moodEntries.fetchEntry(route.params.id)
+    form.date = entry.date
+    form.mood_score = entry.mood_score
+    form.emotion = entry.emotion
+    form.note = entry.note || ''
+    form.temperature = entry.temperature ?? ''
+    form.humidity = entry.humidity ?? ''
+    form.pressure = entry.pressure ?? ''
+    form.wind_speed = entry.wind_speed ?? ''
+    form.weather_condition = entry.weather_condition || ''
+  } catch {}
 })
 
 async function fillWeatherFromLocation() {
@@ -73,13 +75,15 @@ async function fillWeatherFromLocation() {
 }
 
 async function submit() {
-  if (isEditing.value) {
-    await moodEntries.updateEntry(route.params.id, { ...form })
-  } else {
-    await moodEntries.createEntry({ ...form })
-  }
+  try {
+    if (isEditing.value) {
+      await moodEntries.updateEntry(route.params.id, { ...form })
+    } else {
+      await moodEntries.createEntry({ ...form })
+    }
 
-  router.push({ name: 'mood-entries' })
+    router.push({ name: 'mood-entries' })
+  } catch {}
 }
 </script>
 
@@ -88,6 +92,8 @@ async function submit() {
     <h1>{{ isEditing ? 'Edit Mood Entry' : 'New Mood Entry' }}</h1>
 
     <form class="form panel" @submit.prevent="submit">
+      <p v-if="moodEntries.loading && isEditing">Loading entry...</p>
+
       <label>
         Date
         <input v-model="form.date" type="date" required />
