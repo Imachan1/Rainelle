@@ -1,5 +1,7 @@
 import api from './axios'
 
-export function fetchDashboard() {
-  return api.get('/dashboard')
+export async function fetchDashboard() {
+  const response = await api.get('/dashboard')
+
+  return response.data
 }
