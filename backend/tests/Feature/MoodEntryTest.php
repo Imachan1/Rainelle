@@ -25,12 +25,45 @@ class MoodEntryTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('data.date', '2026-06-14')
             ->assertJsonPath('data.mood_score', 8)
-            ->assertJsonPath('data.emotion', 'calm');
+            ->assertJsonPath('data.emotion', 'calm')
+            ->assertJsonPath('data.temperature', null);
 
         $this->assertDatabaseHas('mood_entries', [
             'date' => '2026-06-14',
             'mood_score' => 8,
             'emotion' => 'calm',
+        ]);
+    }
+
+    public function test_user_can_create_mood_entry_with_weather_snapshot(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/mood-entries', [
+            'date' => '2026-06-14',
+            'mood_score' => 8,
+            'emotion' => 'calm',
+            'note' => 'Warm afternoon walk.',
+            'temperature' => 22.5,
+            'humidity' => 61,
+            'pressure' => 1012,
+            'wind_speed' => 12.4,
+            'weather_condition' => 'clear',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.temperature', '22.50')
+            ->assertJsonPath('data.humidity', 61)
+            ->assertJsonPath('data.pressure', 1012)
+            ->assertJsonPath('data.wind_speed', '12.40')
+            ->assertJsonPath('data.weather_condition', 'clear');
+
+        $this->assertDatabaseHas('mood_entries', [
+            'date' => '2026-06-14',
+            'temperature' => 22.5,
+            'humidity' => 61,
+            'pressure' => 1012,
+            'wind_speed' => 12.4,
+            'weather_condition' => 'clear',
         ]);
     }
 
@@ -63,15 +96,27 @@ class MoodEntryTest extends TestCase
             'mood_score' => 7,
             'emotion' => 'focused',
             'note' => 'Felt better after lunch.',
+            'temperature' => 18.2,
+            'humidity' => 55,
+            'pressure' => 1008,
+            'wind_speed' => 7.5,
+            'weather_condition' => 'cloudy',
         ])
             ->assertOk()
             ->assertJsonPath('data.mood_score', 7)
-            ->assertJsonPath('data.emotion', 'focused');
+            ->assertJsonPath('data.emotion', 'focused')
+            ->assertJsonPath('data.temperature', '18.20')
+            ->assertJsonPath('data.weather_condition', 'cloudy');
 
         $this->assertDatabaseHas('mood_entries', [
             'id' => $entry->id,
             'mood_score' => 7,
             'emotion' => 'focused',
+            'temperature' => 18.2,
+            'humidity' => 55,
+            'pressure' => 1008,
+            'wind_speed' => 7.5,
+            'weather_condition' => 'cloudy',
         ]);
     }
 
