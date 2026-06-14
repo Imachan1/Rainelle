@@ -131,6 +131,12 @@ p {
   gap: 0.35rem;
 }
 
+.form-actions {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
 .error {
   color: #b91c1c;
 }
