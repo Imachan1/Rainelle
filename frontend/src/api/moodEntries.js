@@ -1,21 +1,25 @@
 import api from './axios'
 
-export function fetchMoodEntries() {
-  return api.get('/mood-entries')
+function getResponseData(response) {
+  return response.data.data
 }
 
-export function fetchMoodEntry(id) {
-  return api.get(`/mood-entries/${id}`)
+export async function fetchMoodEntries() {
+  return getResponseData(await api.get('/mood-entries'))
 }
 
-export function createMoodEntry(payload) {
-  return api.post('/mood-entries', payload)
+export async function fetchMoodEntry(id) {
+  return getResponseData(await api.get(`/mood-entries/${id}`))
 }
 
-export function updateMoodEntry(id, payload) {
-  return api.put(`/mood-entries/${id}`, payload)
+export async function createMoodEntry(payload) {
+  return getResponseData(await api.post('/mood-entries', payload))
 }
 
-export function deleteMoodEntry(id) {
-  return api.delete(`/mood-entries/${id}`)
+export async function updateMoodEntry(id, payload) {
+  return getResponseData(await api.put(`/mood-entries/${id}`, payload))
+}
+
+export async function deleteMoodEntry(id) {
+  await api.delete(`/mood-entries/${id}`)
 }
