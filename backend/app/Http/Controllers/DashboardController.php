@@ -6,9 +6,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $entries = auth()->user()->moodEntries();
+
         return response()->json([
-            'mood_entries_count' => auth()->user()->moodEntries()->count(),
-            'latest_entry' => auth()->user()->moodEntries()->latest('entry_date')->first(),
+            'total_entries' => (clone $entries)->count(),
+            'average_mood' => round((float) (clone $entries)->avg('mood_score'), 1),
+            'latest_entries' => (clone $entries)->latest('date')->limit(3)->get(),
+            'today_entry' => (clone $entries)->whereDate('date', now()->toDateString())->first(),
         ]);
     }
 }
