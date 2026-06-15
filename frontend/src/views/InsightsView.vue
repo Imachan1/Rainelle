@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import MoodByWeatherChart from '../components/charts/MoodByWeatherChart.vue'
 import MoodTimelineChart from '../components/charts/MoodTimelineChart.vue'
 import { useInsightsStore } from '../stores/insights'
 import { useMoodEntriesStore } from '../stores/moodEntries'
@@ -64,12 +65,15 @@ onMounted(() => {
 
       <div class="panel">
         <h2>Mood by weather</h2>
-        <div v-if="moodByWeather.length" class="list">
-          <div v-for="[condition, average] in moodByWeather" :key="condition" class="entry-summary">
-            <strong>{{ condition }}</strong>
-            <span>{{ average }}/10</span>
+        <template v-if="moodByWeather.length">
+          <MoodByWeatherChart :items="moodByWeather" />
+          <div class="list">
+            <div v-for="[condition, average] in moodByWeather" :key="condition" class="entry-summary">
+              <strong>{{ condition }}</strong>
+              <span>{{ average }}/10</span>
+            </div>
           </div>
-        </div>
+        </template>
         <p v-else>No weather-based mood data yet.</p>
       </div>
     </div>
