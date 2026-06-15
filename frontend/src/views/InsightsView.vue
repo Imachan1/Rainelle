@@ -1,12 +1,19 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import MoodTimelineChart from '../components/charts/MoodTimelineChart.vue'
 import { useInsightsStore } from '../stores/insights'
+import { useMoodEntriesStore } from '../stores/moodEntries'
 
 const insights = useInsightsStore()
+const moodEntries = useMoodEntriesStore()
 const summary = computed(() => insights.summary)
 const moodByWeather = computed(() => Object.entries(summary.value?.mood_by_weather_condition || {}))
+const loading = computed(() => insights.loading || moodEntries.loading)
 
-onMounted(() => insights.fetchSummary())
+onMounted(() => {
+  insights.fetchSummary()
+  moodEntries.fetchEntries()
+})
 </script>
 
 <template>
@@ -14,7 +21,7 @@ onMounted(() => insights.fetchSummary())
     <h1>Insights</h1>
 
     <p v-if="insights.error" class="error">{{ insights.error }}</p>
-    <p v-if="insights.loading">Loading insights...</p>
+    <p v-if="loading">Loading insights...</p>
 
     <div v-else>
       <div class="summary-grid">
@@ -47,6 +54,12 @@ onMounted(() => insights.fetchSummary())
           <span>Average recorded temperature</span>
           <strong>{{ summary?.average_temperature ?? 0 }}C</strong>
         </div>
+      </div>
+
+      <div class="panel">
+        <h2>Mood timeline</h2>
+        <MoodTimelineChart v-if="moodEntries.entries.length" :entries="moodEntries.entries" />
+        <p v-else>No mood entries to chart yet.</p>
       </div>
 
       <div class="panel">

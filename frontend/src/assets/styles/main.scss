@@ -203,6 +203,24 @@ p {
   margin-top: 0.35rem;
 }
 
+.chart-svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+  width: 100%;
+}
+
+.chart-svg text {
+  fill: #64748b;
+  font-size: 0.75rem;
+}
+
+.chart-svg path,
+.chart-svg line {
+  stroke: #cbd5e1;
+}
+
 .error {
   color: #b91c1c;
 }
