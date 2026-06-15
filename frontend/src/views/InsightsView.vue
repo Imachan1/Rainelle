@@ -1,25 +1,53 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import MoodByWeatherChart from '../components/charts/MoodByWeatherChart.vue'
 import MoodTimelineChart from '../components/charts/MoodTimelineChart.vue'
 import { useInsightsStore } from '../stores/insights'
 import { useMoodEntriesStore } from '../stores/moodEntries'
 
+const ranges = [
+  { value: 'last_7_days', label: 'Last 7 days' },
+  { value: 'last_30_days', label: 'Last 30 days' },
+  { value: 'this_month', label: 'This month' },
+  { value: 'all_time', label: 'All time' },
+]
+
 const insights = useInsightsStore()
 const moodEntries = useMoodEntriesStore()
+const selectedRange = ref('all_time')
 const summary = computed(() => insights.summary)
 const moodByWeather = computed(() => Object.entries(summary.value?.mood_by_weather_condition || {}))
 const loading = computed(() => insights.loading || moodEntries.loading)
 
-onMounted(() => {
-  insights.fetchSummary()
-  moodEntries.fetchEntries()
-})
+function loadInsights() {
+  insights.fetchSummary(selectedRange.value)
+  moodEntries.fetchEntries({ range: selectedRange.value })
+}
+
+function selectRange(range) {
+  selectedRange.value = range
+  loadInsights()
+}
+
+onMounted(loadInsights)
 </script>
 
 <template>
   <section>
     <h1>Insights</h1>
+
+    <div class="filter-actions" aria-label="Insights date range">
+      <button
+        v-for="range in ranges"
+        :key="range.value"
+        type="button"
+        :class="{ secondary: selectedRange !== range.value }"
+        :disabled="loading && selectedRange === range.value"
+        @click="selectRange(range.value)"
+      >
+        {{ range.label }}
+      </button>
+    </div>
 
     <p v-if="insights.error" class="error">{{ insights.error }}</p>
     <p v-if="loading">Loading insights...</p>

@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 class InsightsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $entries = auth()->user()->moodEntries()->get();
+        $validated = $request->validate([
+            'range' => ['sometimes', Rule::in(['last_7_days', 'last_30_days', 'this_month', 'all_time'])],
+        ]);
+
+        $entries = auth()->user()
+            ->moodEntries()
+            ->tap(fn (Builder $query) => $this->applyDateRange($query, $validated['range'] ?? 'all_time'))
+            ->get();
         $weatherEntries = $entries->filter(fn ($entry) => filled($entry->weather_condition));
 
         return response()->json([
@@ -28,5 +39,19 @@ class InsightsController extends Controller
                 ->sortKeys()
                 ->all(),
         ]);
+    }
+
+    private function applyDateRange(Builder $query, string $range): void
+    {
+        $startDate = match ($range) {
+            'last_7_days' => now()->subDays(6)->toDateString(),
+            'last_30_days' => now()->subDays(29)->toDateString(),
+            'this_month' => now()->startOfMonth()->toDateString(),
+            default => null,
+        };
+
+        if ($startDate) {
+            $query->whereDate('date', '>=', $startDate);
+        }
     }
 }

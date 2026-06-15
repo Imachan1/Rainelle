@@ -34,6 +34,11 @@ button:disabled {
   opacity: 0.65;
 }
 
+button.secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
 input,
 textarea {
   border: 1px solid #d5dbea;
@@ -103,6 +108,13 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 

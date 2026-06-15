@@ -4,8 +4,8 @@ function getResponseData(response) {
   return response.data.data
 }
 
-export async function fetchMoodEntries() {
-  return getResponseData(await api.get('/mood-entries'))
+export async function fetchMoodEntries(params = {}) {
+  return getResponseData(await api.get('/mood-entries', { params }))
 }
 
 export async function fetchMoodEntry(id) {

@@ -82,6 +82,28 @@ class MoodEntryTest extends TestCase
             ->assertJsonPath('data.0.date', '2026-06-14');
     }
 
+    public function test_user_can_filter_mood_entries_by_date_range(): void
+    {
+        $user = User::factory()->create();
+
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDays(3)->toDateString()]);
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDays(12)->toDateString()]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/mood-entries?range=last_7_days')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.date', now()->subDays(3)->toDateString());
+    }
+
+    public function test_mood_entry_range_must_be_valid(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->getJson('/api/mood-entries?range=invalid')->assertUnprocessable();
+    }
+
     public function test_user_can_update_their_mood_entry(): void
     {
         $user = User::factory()->create();

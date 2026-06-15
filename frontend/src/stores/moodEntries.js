@@ -13,11 +13,11 @@ export const useMoodEntriesStore = defineStore('moodEntries', {
     setError(error, fallback) {
       this.errors = getApiErrorMessage(error, fallback)
     },
-    async fetchEntries() {
+    async fetchEntries(params = {}) {
       this.loading = true
       this.errors = null
       try {
-        this.entries = await moodEntriesApi.fetchMoodEntries()
+        this.entries = await moodEntriesApi.fetchMoodEntries(params)
       } catch (error) {
         this.setError(error, 'Unable to load mood entries.')
       } finally {

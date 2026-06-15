@@ -9,12 +9,12 @@ export const useInsightsStore = defineStore('insights', {
     error: null,
   }),
   actions: {
-    async fetchSummary() {
+    async fetchSummary(range = 'all_time') {
       this.loading = true
       this.error = null
 
       try {
-        this.summary = await fetchInsights()
+        this.summary = await fetchInsights(range)
       } catch (error) {
         this.error = getApiErrorMessage(error, 'Unable to load insights.')
       } finally {

@@ -75,4 +75,33 @@ class InsightsTest extends TestCase
             ->assertJsonPath('mood_by_weather_condition.Rain', 4)
             ->assertJsonMissingPath('mood_by_weather_condition.Snow');
     }
+
+    public function test_insights_can_be_filtered_by_date_range(): void
+    {
+        $user = User::factory()->create();
+
+        MoodEntry::factory()->for($user)->create([
+            'date' => now()->subDays(2)->toDateString(),
+            'mood_score' => 8,
+            'emotion' => 'calm',
+            'temperature' => 20,
+            'weather_condition' => 'Clear',
+        ]);
+        MoodEntry::factory()->for($user)->create([
+            'date' => now()->subDays(20)->toDateString(),
+            'mood_score' => 2,
+            'emotion' => 'tired',
+            'temperature' => 10,
+            'weather_condition' => 'Rain',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/insights?range=last_7_days')
+            ->assertOk()
+            ->assertJsonPath('total_entries', 1)
+            ->assertJsonPath('average_mood', 8)
+            ->assertJsonPath('mood_by_weather_condition.Clear', 8)
+            ->assertJsonMissingPath('mood_by_weather_condition.Rain');
+    }
 }
