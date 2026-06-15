@@ -75,6 +75,16 @@ onMounted(loadInsights)
         </div>
 
         <div class="panel">
+          <span>Current streak</span>
+          <strong>{{ summary?.current_streak ?? 0 }} days</strong>
+        </div>
+
+        <div class="panel">
+          <span>Longest streak</span>
+          <strong>{{ summary?.longest_streak ?? 0 }} days</strong>
+        </div>
+
+        <div class="panel">
           <span>Most common emotion</span>
           <strong>{{ summary?.most_common_emotion ?? '-' }}</strong>
         </div>

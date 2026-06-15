@@ -21,7 +21,9 @@ class DashboardTest extends TestCase
             ->assertJsonPath('total_entries', 0)
             ->assertJsonPath('average_mood', 0)
             ->assertJsonPath('latest_entries', [])
-            ->assertJsonPath('today_entry', null);
+            ->assertJsonPath('today_entry', null)
+            ->assertJsonPath('current_streak', 0)
+            ->assertJsonPath('longest_streak', 0);
     }
 
     public function test_dashboard_returns_user_summary(): void
@@ -62,6 +64,8 @@ class DashboardTest extends TestCase
             ->assertJsonPath('average_mood', 5)
             ->assertJsonCount(3, 'latest_entries')
             ->assertJsonPath('latest_entries.0.emotion', 'calm')
-            ->assertJsonPath('today_entry.emotion', 'calm');
+            ->assertJsonPath('today_entry.emotion', 'calm')
+            ->assertJsonPath('current_streak', 4)
+            ->assertJsonPath('longest_streak', 4);
     }
 }

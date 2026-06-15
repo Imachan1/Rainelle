@@ -22,6 +22,8 @@ class InsightsTest extends TestCase
             ->assertJsonPath('average_mood', 0)
             ->assertJsonPath('best_mood', null)
             ->assertJsonPath('worst_mood', null)
+            ->assertJsonPath('current_streak', 0)
+            ->assertJsonPath('longest_streak', 0)
             ->assertJsonPath('most_common_emotion', null)
             ->assertJsonPath('average_temperature', 0)
             ->assertJsonPath('mood_by_weather_condition', []);
@@ -103,5 +105,23 @@ class InsightsTest extends TestCase
             ->assertJsonPath('average_mood', 8)
             ->assertJsonPath('mood_by_weather_condition.Clear', 8)
             ->assertJsonMissingPath('mood_by_weather_condition.Rain');
+    }
+
+    public function test_insights_returns_mood_streaks(): void
+    {
+        $user = User::factory()->create();
+
+        MoodEntry::factory()->for($user)->create(['date' => now()->toDateString()]);
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDay()->toDateString()]);
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDays(3)->toDateString()]);
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDays(4)->toDateString()]);
+        MoodEntry::factory()->for($user)->create(['date' => now()->subDays(5)->toDateString()]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/insights')
+            ->assertOk()
+            ->assertJsonPath('current_streak', 2)
+            ->assertJsonPath('longest_streak', 3);
     }
 }

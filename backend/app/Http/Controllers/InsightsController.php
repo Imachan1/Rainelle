@@ -19,12 +19,15 @@ class InsightsController extends Controller
             ->tap(fn (Builder $query) => $this->applyDateRange($query, $validated['range'] ?? 'all_time'))
             ->get();
         $weatherEntries = $entries->filter(fn ($entry) => filled($entry->weather_condition));
+        $streaks = $this->calculateMoodStreaks($entries->pluck('date'));
 
         return response()->json([
             'total_entries' => $entries->count(),
             'average_mood' => round((float) $entries->avg('mood_score'), 1),
             'best_mood' => $entries->max('mood_score'),
             'worst_mood' => $entries->min('mood_score'),
+            'current_streak' => $streaks['current_streak'],
+            'longest_streak' => $streaks['longest_streak'],
             'most_common_emotion' => $entries
                 ->groupBy('emotion')
                 ->sortByDesc(fn ($group) => $group->count())
