@@ -29,34 +29,39 @@ async function submit() {
 <template>
   <form class="auth-form" @submit.prevent="submit">
     <nav class="auth-switch" aria-label="Authentication options">
-      <RouterLink class="auth-switch__item" to="/login">Sign in</RouterLink>
-      <RouterLink class="auth-switch__item" to="/register">Sign up</RouterLink>
+      <RouterLink class="auth-switch__item" to="/login">sign in</RouterLink>
+      <RouterLink class="auth-switch__item" to="/register">sign up</RouterLink>
     </nav>
-
-    <header class="auth-form__header">
-      <p>Start softly</p>
-      <h2>Create your account</h2>
-    </header>
 
     <div class="auth-form__fields">
       <label class="auth-field">
-        <span>Name</span>
-        <input v-model="form.name" type="text" autocomplete="name" required />
+        <span class="auth-field__icon auth-field__icon--user" aria-hidden="true"></span>
+        <input v-model="form.name" type="text" autocomplete="name" placeholder="name" aria-label="Name" required />
       </label>
       <label class="auth-field">
-        <span>Email</span>
-        <input v-model="form.email" type="email" autocomplete="email" required />
+        <span class="auth-field__icon auth-field__icon--mail" aria-hidden="true"></span>
+        <input v-model="form.email" type="email" autocomplete="email" placeholder="email" aria-label="Email" required />
       </label>
       <label class="auth-field">
-        <span>Password</span>
-        <input v-model="form.password" type="password" autocomplete="new-password" minlength="8" required />
+        <span class="auth-field__icon auth-field__icon--lock" aria-hidden="true"></span>
+        <input
+          v-model="form.password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="password"
+          aria-label="Password"
+          minlength="8"
+          required
+        />
       </label>
       <label class="auth-field">
-        <span>Confirm password</span>
+        <span class="auth-field__icon auth-field__icon--lock" aria-hidden="true"></span>
         <input
           v-model="form.password_confirmation"
           type="password"
           autocomplete="new-password"
+          placeholder="confirm password"
+          aria-label="Confirm password"
           minlength="8"
           required
         />
@@ -66,7 +71,8 @@ async function submit() {
     <p v-if="error" class="auth-error">{{ error }}</p>
 
     <button class="auth-submit" type="submit" :disabled="auth.loading">
-      {{ auth.loading ? 'Creating account...' : 'Create account' }}
+      <span>{{ auth.loading ? 'creating account...' : 'sign up' }}</span>
+      <span class="auth-submit__arrow" aria-hidden="true"></span>
     </button>
 
     <div class="auth-divider">
@@ -76,17 +82,17 @@ async function submit() {
     <div class="auth-socials" aria-label="Social sign up placeholders">
       <button class="auth-social" type="button" disabled>
         <span>G</span>
-        Continue with Google
+        continue with google
       </button>
       <button class="auth-social" type="button" disabled>
-        <span>A</span>
-        Continue with Apple
+        <span class="auth-social__apple"></span>
+        continue with apple
       </button>
     </div>
 
-    <p class="auth-alt">
-      Already registered?
-      <RouterLink to="/login">Sign in</RouterLink>
+    <p class="auth-terms">
+      by continuing, you agree to our<br />
+      <span>Terms of Use</span> and <span>Privacy Policy</span>
     </p>
   </form>
 </template>

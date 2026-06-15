@@ -7,14 +7,17 @@
           <span>24</span>
         </div>
         <div class="auth-brand__content">
-          <p class="auth-brand__eyebrow">Mood-led weather journaling</p>
           <h1>Rainelle</h1>
-          <p>Track the shape of your days with quiet, clear emotional context.</p>
+          <p>your space, your creativity.</p>
         </div>
         <div class="auth-sculpture" aria-hidden="true">
           <span class="auth-sculpture__stone auth-sculpture__stone--top"></span>
           <span class="auth-sculpture__stone auth-sculpture__stone--base"></span>
         </div>
+      </div>
+      <div class="auth-language" aria-hidden="true">
+        EN
+        <span></span>
       </div>
       <section class="auth-card">
         <RouterView />
