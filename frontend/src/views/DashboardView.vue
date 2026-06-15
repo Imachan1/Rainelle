@@ -47,16 +47,6 @@ onMounted(() => dashboard.fetchSummary())
     <div v-else>
       <div class="summary-grid">
         <div class="panel">
-          <span>Total entries</span>
-          <strong>{{ summary?.total_entries ?? 0 }}</strong>
-        </div>
-
-        <div class="panel">
-          <span>Average mood</span>
-          <strong>{{ summary?.average_mood ?? 0 }}/10</strong>
-        </div>
-
-        <div class="panel">
           <span>Current streak</span>
           <strong>{{ summary?.current_streak ?? 0 }} days</strong>
         </div>
