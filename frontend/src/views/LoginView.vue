@@ -33,11 +33,17 @@ async function submit() {
 
     <div class="auth-form__fields">
       <label class="auth-field">
-        <span class="auth-field__icon auth-field__icon--mail" aria-hidden="true"></span>
+        <svg class="auth-field__icon auth-field__icon--mail" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M4.75 6.75h14.5v10.5H4.75z" />
+          <path d="m5.25 7.25 6.75 5.5 6.75-5.5" />
+        </svg>
         <input v-model="form.email" type="email" autocomplete="email" placeholder="email" aria-label="Email" required />
       </label>
       <label class="auth-field">
-        <span class="auth-field__icon auth-field__icon--lock" aria-hidden="true"></span>
+        <svg class="auth-field__icon auth-field__icon--lock" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M7.5 10.5h9v8h-9z" />
+          <path d="M9 10.5V8a3 3 0 0 1 6 0v2.5" />
+        </svg>
         <input
           v-model="form.password"
           type="password"
@@ -46,7 +52,10 @@ async function submit() {
           aria-label="Password"
           required
         />
-        <span class="auth-field__icon auth-field__icon--eye" aria-hidden="true"></span>
+        <svg class="auth-field__icon auth-field__icon--eye" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M3.75 12s3-5 8.25-5 8.25 5 8.25 5-3 5-8.25 5-8.25-5-8.25-5z" />
+          <path d="M12 9.75a2.25 2.25 0 1 1 0 4.5 2.25 2.25 0 0 1 0-4.5z" />
+        </svg>
       </label>
     </div>
 
@@ -56,7 +65,12 @@ async function submit() {
 
     <button class="auth-submit" type="submit" :disabled="auth.loading">
       <span>{{ auth.loading ? 'signing in...' : 'sign in' }}</span>
-      <span class="auth-submit__arrow" aria-hidden="true"></span>
+      <span class="auth-submit__arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12h13" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
+      </span>
     </button>
 
     <div class="auth-divider">
@@ -69,8 +83,8 @@ async function submit() {
         continue with google
       </button>
       <button class="auth-social" type="button" disabled>
-        <span class="auth-social__apple"></span>
-        continue with apple
+        <span class="auth-social__facebook">f</span>
+        continue with facebook
       </button>
     </div>
 
