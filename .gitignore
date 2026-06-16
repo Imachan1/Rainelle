@@ -18,6 +18,7 @@ backend/bootstrap/cache/*.php
 # Build output
 frontend/dist/
 frontend/.vite/
+.tmp-edge-auth/
 
 # OS / editor
 .DS_Store

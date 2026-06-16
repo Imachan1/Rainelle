@@ -199,6 +199,9 @@ p {
     18px 22px 34px rgba(51, 55, 55, 0.17),
     inset 1px 1px 0 rgba(255, 255, 255, 0.76),
     inset -1px -1px 0 rgba(174, 178, 178, 0.16);
+  display: flex;
+  flex-direction: column;
+  height: 45.75rem;
   padding: 2rem;
   width: 100%;
   z-index: 1;
@@ -207,6 +210,7 @@ p {
 .auth-form {
   color: var(--auth-ink);
   display: grid;
+  flex: 1;
   gap: 1rem;
 }
 
@@ -220,6 +224,31 @@ p {
   height: 3.15rem;
   margin-bottom: 1.55rem;
   padding: 0.08rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.auth-switch::before {
+  background:
+    linear-gradient(145deg, rgba(233, 235, 234, 0.86), rgba(222, 225, 224, 0.7));
+  border-radius: inherit;
+  box-shadow:
+    -3px -3px 7px rgba(255, 255, 255, 0.62),
+    4px 4px 7px rgba(51, 55, 55, 0.1),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.42);
+  content: "";
+  height: calc(100% - 0.16rem);
+  left: 0.08rem;
+  position: absolute;
+  top: 0.08rem;
+  transform: translateX(0);
+  transition: transform 640ms cubic-bezier(0.18, 0.88, 0.22, 1), box-shadow 320ms ease;
+  width: calc(50% - 0.08rem);
+  z-index: 0;
+}
+
+.auth-switch--register::before {
+  transform: translateX(100%);
 }
 
 .auth-switch__item {
@@ -232,18 +261,18 @@ p {
   font-weight: 300;
   justify-content: center;
   padding: 0 1rem;
+  position: relative;
   text-align: center;
-  transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease;
+  transition: color 320ms ease, transform 220ms ease;
+  z-index: 1;
 }
 
 .auth-switch__item.router-link-active {
-  background:
-    linear-gradient(145deg, rgba(233, 235, 234, 0.82), rgba(222, 225, 224, 0.68));
-  box-shadow:
-    -3px -3px 7px rgba(255, 255, 255, 0.62),
-    4px 4px 7px rgba(51, 55, 55, 0.1),
-    inset 1px 1px 1px rgba(255, 255, 255, 0.42);
   color: rgba(0, 0, 0, 0.96);
+}
+
+.auth-switch__item:active {
+  transform: translateY(1px);
 }
 
 .auth-form__header {
@@ -372,7 +401,7 @@ p {
   margin-bottom: 1.1rem;
   padding: 0 1.25rem;
   position: relative;
-  transition: box-shadow 160ms ease, transform 160ms ease;
+  transition: box-shadow 240ms ease, transform 240ms ease, background 240ms ease;
 }
 
 .auth-submit:not(:disabled):hover {
@@ -384,8 +413,9 @@ p {
 }
 
 .auth-submit:active {
-  box-shadow: var(--auth-pressed);
-  transform: translateY(0);
+  background: rgba(230, 233, 232, 0.82);
+  box-shadow: var(--auth-field-pressed);
+  transform: translateY(1px) scale(0.992);
 }
 
 .auth-submit:disabled {
@@ -403,7 +433,16 @@ p {
   justify-content: center;
   position: absolute;
   right: 0.5rem;
+  transition: box-shadow 240ms ease, transform 240ms ease, background 240ms ease;
   width: 2.4rem;
+}
+
+.auth-submit:active .auth-submit__arrow {
+  background: rgba(229, 232, 231, 0.86);
+  box-shadow:
+    inset 2px 3px 4px rgba(43, 47, 48, 0.18),
+    inset -3px -3px 4px rgba(255, 255, 255, 0.82);
+  transform: translateX(1px);
 }
 
 .auth-submit__arrow svg {
@@ -454,6 +493,13 @@ p {
   min-height: 3.12rem;
   opacity: 1;
   position: relative;
+  transition: box-shadow 240ms ease, transform 240ms ease, background 240ms ease;
+}
+
+.auth-social:active {
+  background: rgba(230, 233, 232, 0.78);
+  box-shadow: var(--auth-field-pressed);
+  transform: translateY(1px) scale(0.994);
 }
 
 .auth-social span {
@@ -496,6 +542,16 @@ p {
 .auth-terms span {
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-switch::before,
+  .auth-switch__item,
+  .auth-submit,
+  .auth-submit__arrow,
+  .auth-social {
+    transition: none;
+  }
 }
 
 .app-layout {
@@ -722,6 +778,7 @@ p {
 
   .auth-card {
     border-radius: 28px;
+    height: 40.75rem;
     padding: 1.05rem;
   }
 

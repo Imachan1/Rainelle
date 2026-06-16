@@ -28,11 +28,6 @@ async function submit() {
 
 <template>
   <form class="auth-form" @submit.prevent="submit">
-    <nav class="auth-switch" aria-label="Authentication options">
-      <RouterLink class="auth-switch__item" to="/login">sign in</RouterLink>
-      <RouterLink class="auth-switch__item" to="/register">sign up</RouterLink>
-    </nav>
-
     <div class="auth-form__fields">
       <label class="auth-field">
         <svg class="auth-field__icon auth-field__icon--user" aria-hidden="true" viewBox="0 0 24 24">
@@ -97,11 +92,11 @@ async function submit() {
     </div>
 
     <div class="auth-socials" aria-label="Social sign up placeholders">
-      <button class="auth-social" type="button" disabled>
+      <button class="auth-social" type="button" aria-disabled="true">
         <span>G</span>
         continue with google
       </button>
-      <button class="auth-social" type="button" disabled>
+      <button class="auth-social" type="button" aria-disabled="true">
         <span class="auth-social__facebook">f</span>
         continue with facebook
       </button>
